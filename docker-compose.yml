@@ -1,0 +1,52 @@
+version: "3"
+
+services:
+  nest:
+    image: nest
+    build: ./requirements/nest/
+
+    container_name: nest
+
+    restart: always
+
+    env_file:
+      - ./requirements/.env
+
+    ports:
+      - "42422:42422"
+    # volumes:
+    #   - type: volume
+    #     target: /app
+    #     source: nest_volume
+    networks:
+      - ts_network
+
+  postgres:
+    image: postgres
+    build: ./requirements/postgresql/
+
+    container_name: postgres
+
+    restart: always
+
+    env_file:
+      - ./requirements/.env
+
+    ports:
+      - "5432:5432"
+    networks:
+      - ts_network
+
+  react:
+    image: react
+    build: ./requirements/react
+    container_name: react
+    restart: always
+    networks:
+      - ts_network
+    ports:
+      - "42421:42421"
+
+networks:
+  ts_network:
+    driver: bridge
